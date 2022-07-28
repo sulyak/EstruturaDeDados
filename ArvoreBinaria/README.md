@@ -1,4 +1,15 @@
-﻿```c
+﻿Segundo a Wikipedia:
+
+Uma **árvore binária** é uma estrutura de dados caracterizada por:
+
+-   Ou não tem elemento algum (árvore vazia).
+-   Ou tem um elemento distinto, denominado raiz, com dois ponteiros para duas estruturas diferentes, denominadas subárvore esquerda e subárvore direita.
+
+Perceba que a definição é recursiva e, devido a isso, muitas operações sobre árvores binárias utilizam recursão.
+
+
+Podendo ser representada em C pela seguinte estrutura:
+```c
 struct arvbin {
     int info;
     struct arvbin *esq, *dir;
@@ -6,7 +17,20 @@ struct arvbin {
 typedef struct arvbin TAB;
 ```
 
-#### Criando de um nó
+Table of contents:
+* Criando um nó
+* Copiando uma árvore
+* Espelhando uma árvore　
+* Encontrando menor/maior elemento de uma árvore　
+* Comparando duas árvores
+* Retirando os nos pares de uma árvore
+* Contando os nos
+* Contando os nos internos
+* Contando os nos folhas
+* Transformando em um vetor
+* Transformando em uma Lista Simplismente Encadeada
+* Transformando em uma Árvore Binária de Busca
+#### Criando um nó
 ```c
 TAB *TAB_cria(int info, TAB *esq, TAB *dir) {
     TAB *no = (TAB *) malloc(sizeof(TAB));
@@ -46,6 +70,10 @@ TAB *copia(TAB *a) {
 }
 ```
 #### Espelhando uma árvore
+Semanticamente, podemos pensar num espelhamento da seguinte maneira:
+1. Copiar a informação da raiz
+2. Minha sub-árvore da esquerda vai ser o espelho da sub-árvore da direita
+3. Minha sub-árvore da direita vai ser o espelho da sub-árvore da esquerda
 ```c
 TAB *espelho(TAB *a) {
     if(!a)
@@ -54,6 +82,8 @@ TAB *espelho(TAB *a) {
 }
 ```
 #### Encontrando menor/maior elemento de uma árvore
+1. Encontrar o maior elemento das sub-árvores
+2. Comparar esses dois elementos com a raiz e retornar o maior dos 3.
 ```c
 TAB *maior(TAB *a) {
     if(!a)
@@ -77,6 +107,10 @@ TAB *maior(TAB *a) {
 ```
 
 #### Comparando duas árvores
+1. Comparar a informacao das duas raizes.
+2. Se as raizes foram iguais, as sub-árvores tambem precisam ser iguais.
+
+Obs: Duas arvores vazias (NULL) sao iguais.
 ```c
 int igual(TAB *a, TAB *b) {
     // duas arvores vazias
@@ -96,6 +130,10 @@ int igual(TAB *a, TAB *b) {
 
 #### Retirando os nos pares de uma árvore
 
+1. Retirar os elementos pares das sub-arvores
+2. Se o elemento da raiz for par:
+a. Se esse elemento for folha, libera e retorna NULL;
+b. Se nao for folha, troca o elemento da raiz com um de seus filhos (que nao vao ser pares devido ao passo 1) e tentar retirar os pares novamente.
 ```c
 TAB *retira_pares(TAB *a){
     if(!a)
@@ -133,6 +171,8 @@ TAB *retira_pares(TAB *a){
 ```
 
 #### Contando os nos 
+O numero de nos de uma arvore pode ser pensado como:
+Numero de nos da raiz (1) + numero de nos das sub-arvores.
 ```c
 int nn(TAB *a) {
     if(!a)
@@ -140,6 +180,8 @@ int nn(TAB *a) {
     return 1 + nn(a->esq) + nn(a->dir);
 ```
 #### Contando os nos internos
+Se a raiz for um no interno, o numero de nos internos da arvore vai ser 1 (raiz) + nos internos das sub-arvores.
+Caso a raiz for uma folha, nao tem nenhum no interno.
 ```c
 int ni(TAB *a) {
     if(!a)
@@ -154,6 +196,7 @@ int ni(TAB *a) {
 ```
 
 #### Contando os nos folhas
+Semelhante a contagem de nos internos, porem com a logica invertida.
 ```c
 int ni(TAB *a) {
     if(!a)
@@ -167,6 +210,10 @@ int ni(TAB *a) {
     return nf(a->esq) + nf(a->dir);
 ```
 #### Transformando em um vetor
+1. Descobrir o tamanho do vetor (AKA o numero de nos da arvore)
+2. Para cara no, preciso guardar um espaco para a sub-arvore da esquerda, inserir a informacao do no atual e depois inserir a sub-arvore da esquerda nas posicoes que sobraram.
+     a. guardar espaco pra sub-arvore da esquerda: contar quantos nos existem na subarvore da esquerda e colocar a informacao atual na posicao seguinte
+     b. fazer o mesmo processo para a sub-arvore da esquerda e direita. (Obs: o vetor referencia da sub-arvore da direita vai ser o sub-vetor que comeca a partir da posicao atual)
 ```c
 int *ab2vet(TAB *a) {
     if(!a)
@@ -188,6 +235,7 @@ void tovet(TAB *a, int *vet) {
 ```
 
 #### Transformando em uma Lista Simplismente Encadeada
+para cada elemento da arvore, inserir na lista. bem simples, so precisa tomar cuidado para passar a lista por parametro e retornar a lista atualizada.
 ```c
 TLSE *ab2lse(TAB *a) {
     if(!a)
@@ -205,6 +253,7 @@ TLSE *tolse(TAB *a, TLSE *l) {
 }
 ```
 #### Transformando em uma Árvore Binária de Busca
+spooky stuff
 ```c
 TABB *ab2abb(TAB *a) {
     if(!a)
